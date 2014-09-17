@@ -1,6 +1,6 @@
 /** Implementation of the Phone_Directory using an array
-	of entries
-	@author Koffman and Wolfgang
+of entries
+@author Koffman and Wolfgang
 */
 
 #include "Array_Based_PD.h"
@@ -12,25 +12,24 @@
 using namespace std;
 
 /** Construct an empty Phone_Directory
- */
+*/
 Phone_Directory::Phone_Directory() :
-size(0), capacity(100), the_directory(new Directory_Entry[100]),
-source_name("") {}
+size(0), capacity(100), the_directory(new Directory_Entry[100]), source_name("") {}
 
 /** Destroy the Phone_Directory
- */
+*/
 Phone_Directory::~Phone_Directory()
 {
 	delete[] the_directory;
 }
 
 /** Function to load the data file.
-	pre:  The directory storage has been created and it is empty.
-	If the file exists, it consists of the name-number pairs
-	on adjacent lines.
-	post: The data from the file is loaded into the directory.
-	@param source_name The name of the data file
-	*/
+pre:  The directory storage has been created and it is empty.
+If the file exists, it consists of the name-number pairs
+on adjacent lines.
+post: The data from the file is loaded into the directory.
+@param source_name The name of the data file
+*/
 void Phone_Directory::load_data(const string& source_name)
 {
 	// Remember the source name for use by save.
@@ -51,10 +50,10 @@ void Phone_Directory::load_data(const string& source_name)
 }
 
 /** Add an entry or change an existing entry.
-	@param name The name of the person being added or changed
-	@param number The new number to be assigned
-	@return The old number or, if a new entry, an empty string
-	*/
+@param name The name of the person being added or changed
+@param number The new number to be assigned
+@return The old number or, if a new entry, an empty string
+*/
 string Phone_Directory::add_or_change_entry(const string& name,
 	const string& number)
 {
@@ -72,9 +71,9 @@ string Phone_Directory::add_or_change_entry(const string& name,
 }
 
 /** Look up an entry.
-	@param name The name of the person
-	@return The number. If not in the directory, an empty string
-	*/
+@param name The name of the person
+@return The number. If not in the directory, an empty string
+*/
 string Phone_Directory::lookup_entry(const string& name) const
 {
 	int index = find(name);
@@ -87,11 +86,11 @@ string Phone_Directory::lookup_entry(const string& name) const
 }
 
 /** Function to save the directory.
-	pre:  The directory has been loaded with data
-	post: Contents of directory written back to the file in the
-	form of name-number pairs on adjacent lines.
-	modified is reset to false.
-	*/
+pre:  The directory has been loaded with data
+post: Contents of directory written back to the file in the
+form of name-number pairs on adjacent lines.
+modified is reset to false.
+*/
 void Phone_Directory::save()
 {
 	if (modified) {  // if not modified, do nothing
@@ -108,28 +107,39 @@ void Phone_Directory::save()
 }
 
 /** Remove an entry
-	post: The name is no longer in the directory
-	@param name The name to be removed
-	@return That person's name or an empty string
-	if not in the directory
-	*/
+post: The name is no longer in the directory
+@param name The name to be removed
+@return That person's name or an empty string
+if not in the directory
+*/
 string Phone_Directory::remove_entry(const string& name) // Exercise 1.7: please complete the remove_entry() method - Ed/Kent
+//Zeus
 {
+	int index = Phone_Directory::find(name); // Call function find to determine if name is already in the directory
+	string p_num = the_directory[index].get_number(); // set p_num = to the number of person being removed
+	if (index != -1) { //If name is already in directory
+		the_directory[index].set_number(" "); // Remove(overwrite) entry from the array and modify the size
+		for (int i = index; i < size - 1; i++) //search array from index (location in array being removed) to the end
+			the_directory[i] = the_directory[i + 1]; //shift everything from location being removed down up by 1 leaving the last position blank
+		size--; // reduce array size by 1 removing the blank space
+		return p_num;
+		//return the_directory[index].get_number(); //Return number
+	}
+	else
+		return ""; //Return empty string
 
 	// Hint: you can use the code below to shift names down in the directory to remove the selected entry specified by "index"
 	// for (int i = index; i < size - 1; i++)
-		// the_directory[i] = the_directory[i + 1];
-	// Testing commit - Ewalker
-	return "";
+	// the_directory[i] = the_directory[i + 1];
 }
 
 // Private method implementation
 
 /** Search the array for a given name.
-	@param name The name to be found
-	@return The index of the entry containing this name
-	or -1 if the name is not present
-	*/
+@param name The name to be found
+@return The index of the entry containing this name
+or -1 if the name is not present
+*/
 int Phone_Directory::find(const string& name) const
 {
 	for (int i = 0; i < size; i++) {
@@ -139,9 +149,9 @@ int Phone_Directory::find(const string& name) const
 	return -1;
 }
 /** Add a new name-number pair to the directory.
-	@param name The name to be added
-	@param number The number to be added
-	*/
+@param name The name to be added
+@param number The number to be added
+*/
 void Phone_Directory::add(const string& name,
 	const string& number)
 {
@@ -153,8 +163,8 @@ void Phone_Directory::add(const string& name,
 }
 
 /** Create a new array of directory entries with twice the capacity
-	of the current one.
-	*/
+of the current one.
+*/
 void Phone_Directory::reallocate()
 {
 	// Double the capacity.
